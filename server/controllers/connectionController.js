@@ -1,4 +1,5 @@
 import ConnectionRequest from "../models/connectionRequestModel.js";
+import User from "../models/userModel.js";
 
 //  send connection request
 export const sendConnectionRequest = async (req, res) => {
@@ -38,6 +39,23 @@ export const acceptConnectionRequest = async (req, res) => {
     const request = await ConnectionRequest.findById(requestId)
     .populate("sender", "name email username")
     .populate("recipient", "name username");
+    if(!request){
+      return res.status(403).json({message: "Not authorized to accept this request"});
+    }
+    // check if the req is for the current user
+    if(request.recipient._id.toString() !== userId.toString()) {
+      return res.status(403).json({message: "Not authorized to accept this request"});
+    }
+    // check if the request is already accepted or rejected
+    if(request.status !== "pending"){
+      return res.status(403).json({message: "Request has already been processed"});
+    }
+    // update the request status to accepted
+    request.status = "accepted";
+    await request.save();
+    // if im your friend then ur also my friend
+    await User.findByIdAndUpdate(request.sender._id, {$addToSet: {connections: userId}});
+    await User.findByIdAndUpdate(userId, {$addToSet: {connections: request.sender._id}});
   } catch (error) {
     
   }

@@ -6,7 +6,7 @@ const SignUpPage = () => {
   return (
     <div className="min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8">
      <div className="sm:mx-auto sm:w-full sm:max-w-md">
-      <img src="/logo.svg" alt="logo" className="mx-auto h-36 w-auto" />
+      {/* <img src="/logo.svg" alt="logo" className="mx-auto h-36 w-auto" /> */}
       <h2 className="text-center text-3xl font-extrabold text-gray-700">Make the mos of your professional life</h2>
      </div>
      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md shadow-md">
@@ -24,7 +24,7 @@ const SignUpPage = () => {
         <div className="mt-6">
           <Link 
           to="/login"
-          className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-blue-600 bg-white hover:bg-gray-50
+          className="w-full flex justify-center py-2 px-4 rounded-md shadow-sm text-sm font-medium text-blue-600 border border-blue-600 bg-white hover:bg-gray-50 hover:border-transparent transition-all duration-300
           ">
           Sign in</Link>
         </div>
