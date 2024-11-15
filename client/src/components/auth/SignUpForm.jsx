@@ -18,9 +18,10 @@ const SignUpForm = () => {
     },
     onSuccess: () => {
       toast.success("Registration successfully");
+      
     },
-    onError: () => {
-      toast.error("Registration failed");
+    onError: (err) => {
+      toast.error(err.response.data.message);
     },
   });
 
