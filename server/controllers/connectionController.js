@@ -113,7 +113,71 @@ export const getConnectionRequests = async (req, res) => {
     );
     res.json(requests);
   } catch (error) {
+    console.error("Error in get user connections requests", error);
+    res.status(500).json({message: "Server error"});
+  }
+}
+
+
+// get users connections
+export const getUserConnections = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const user = await User.findById(userId).populate(
+      "Connections",
+      "name username profilePicture headline connections"
+    );
+    res.json(user.connections);
+  } catch (error) {
     console.error("Error in get user connections", error);
+    res.status(500).json({message: "Server error"});
+  }
+}
+
+
+// remove connection
+export const removeConnection = async (req, res) => {
+  try {
+    const myId = req.user._id;
+    const {userId} = req.params;
+    await User.findByIdAndUpdate(myId, {$pull: {connections: userId}});
+    await User.findByIdAndUpdate(userId, {$pull: {connections: myId}});
+    res.json({message: "Connection removed"});
+  } catch (error) {
+    console.error("Error in remove connection", error);
+    res.status(500).json({message: "Server error"});
+  }
+}
+
+
+// get connection status
+export const getConnectionStatus = async (req, res) => {
+  try {
+    const targetUserId = req.params.userId;
+    const currentUserId = req.params.user._id;
+    const currentUser = req.user;
+    if(currentUser.connections.includes(targetUserId)){
+      return res.json({status: "connected"});
+    }
+    const pendingRequest = await ConnectionRequest.findOne({
+      $or: [
+        {sender: currentUserId, recipient: targetUserId},
+        {sender: targetUserId, recipient: currentUserId}
+      ],
+      status: "pending"
+    });
+    if(pendingRequest){
+      if(pendingRequest.sender.toString() === currentUserId.toString()){
+        return res.json({status: "pending"});
+      } else {
+        return res.json({status: "received", requestId: pendingRequest._id});
+      }
+    }
+    // if no connection or pending req found
+    res.json({status: "not_connected"});
+
+  } catch (error) {
+    console.error("Error in get connection status", error);
     res.status(500).json({message: "Server error"});
   }
 }

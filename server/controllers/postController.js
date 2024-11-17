@@ -101,7 +101,7 @@ export const createComment = async (req, res) => {
       await newNotification.save();
       // send email notification
       try {
-        const postUrl = process.env.CLIENT_URL + "/post/²" + postId;
+        const postUrl = process.env.CLIENT_URL + "/post/" + postId;
         await sendCommentNotificationEmail(post.author.email, post.author.name, req.user.name, postUrl, content);
       } catch (error) {
         console.log("Error sending comment notification", error);
