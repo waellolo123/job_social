@@ -13,7 +13,8 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 5000;
 
-app.use(express.json());
+
+app.use(express.json({limit: "5mb"}));  // payload is too large for the images
 app.use(cookieParser());
 app.use(cors({
   origin: ["http://localhost:5173"],

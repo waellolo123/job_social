@@ -1,10 +1,12 @@
 import { useState } from "react";
-import {useMutation} from "@tanstack/react-query";
+import {useMutation, useQueryClient} from "@tanstack/react-query";
 import { axiosInstance } from "../../lib/axios";
 import {toast} from "react-hot-toast";
 import { LiaSpinnerSolid } from "react-icons/lia";
 
 const SignUpForm = () => {
+
+  const queryClient = useQueryClient();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -18,7 +20,7 @@ const SignUpForm = () => {
     },
     onSuccess: () => {
       toast.success("Registration successfully");
-      
+      queryClient.invalidateQueries({queryKey: ["authUser"]});
     },
     onError: (err) => {
       toast.error(err.response.data.message);

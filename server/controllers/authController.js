@@ -44,18 +44,18 @@ export const register = async (req, res) => {
 
     const profileUrl = process.env.CLIENT_URL + "/profile/" + user.username;
 
-    try {
-      await sendWelcomeEmail(user.email, user.name, profileUrl);
-    } catch (error) {
-      console.log("error sending welcome email", error);
-    }
+    // try {
+    //   await sendWelcomeEmail(user.email, user.name, profileUrl);
+    // } catch (error) {
+    //   console.log("error sending welcome email", error);
+    // }
 
   } catch (error) {
     console.log("Error in the regsiter", error.message);
     res.status(500).json({message: "Internal Server Error"});
   }
 }
-
+ 
 export const login = async (req, res) => {
   try {
     const {username, password} = req.body;
@@ -82,7 +82,7 @@ export const login = async (req, res) => {
 }
 
 export const logout = async (req, res) => {
-  res.clearCookie("jwt-token");
+  res.clearCookie("jwt-linkedin");
   res.json({message: "User logged out"});
 }
 
